@@ -1,0 +1,14 @@
+# Credentials — the sandbox logins for the vendor's back office and player site.
+# These must never be committed.
+.env
+.env.*
+!.env.example
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store
+
+# Scratch
+*.log
+tmp/
