@@ -4,8 +4,9 @@ The domain language for this investigation and for any platform built out of it.
 `FINDINGS.md`, the research reports, or the vendor's own product surface — this file fixes what each one means
 so the documents, and any eventual build, use one vocabulary.
 
-Where the vendor's ARC product uses a different word for a concept defined here, that is recorded under
-_Vendor term_ rather than adopted. Their naming is evidence, not our language.
+Where a vendor's product uses a different word for a concept defined here, that is recorded under _Vendor term_
+rather than adopted. Their naming is evidence, not our language. Two vendors are cited: **ARC** (GammaStack) and
+**MBO** (the second back office, `src-analysis/MBO-BACKOFFICE-ANALYSIS.md`).
 
 ## Language
 
@@ -41,6 +42,9 @@ _Vendor term_: ARC calls the content-scoping field "Portal" and the theme a numb
 **Tenant**:
 The isolation unit in a multi-tenant deployment — one brand's data, configuration and enabled module set.
 One tenant serves one brand; the platform serves many tenants.
+_Vendor term_: MBO calls the tenant a **Hall**, and places it at the bottom of a five-level tree —
+`Root → Root_folder → Project → Folder → Hall`. Every back-office page is bound to one of those levels, and
+configuration inherits downward. A Hall owns its currency set and language set.
 
 ### Revenue
 
@@ -115,6 +119,12 @@ A movement of value between the player and a game: a bet, a win, or a rollback.
 One unit of play at the RGS, identified by the studio and explicitly closed by it. A round may contain several
 bets and wins — free-spin chains and re-spins are the reason a round is not the same thing as a bet.
 
+**Game session**:
+A player's continuous span of play on one game, with an identity, a start, an end and a status. Coarser than a
+round and finer than a player's history; it is the level at which per-game money aggregates are naturally held.
+ARC models neither this nor the round. MBO models the session — with bet, win, GGR and balance each split into
+total, real and bonus — but no round entity is evidenced.
+
 **Bet** / **Win**:
 The debit taken when a player stakes, and the credit paid when they are paid out. A win always references the
 bet it settles.
@@ -165,6 +175,8 @@ _Avoid_: playthrough, rollover
 **Wagering contribution**:
 The percentage of a stake on a given game that counts toward the wagering requirement. Per game, because
 low-margin games would otherwise clear a bonus for free.
+_Vendor term_: MBO calls it **bet percentage** (`betPercents`) and configures it as a
+`game studio × game type → percent` matrix rather than per individual game.
 
 **Forfeit**:
 Termination of a bonus instance before its wagering requirement was met, voiding the bonus value.

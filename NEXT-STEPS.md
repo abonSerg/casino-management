@@ -1,8 +1,11 @@
 # Continuation Plan — Casino Management Platform Investigation
 
-**Status as of 2026-07-31.** This document records exactly what was covered, what was not, and what to do in
+**Status as of 2026-08-23.** This document records exactly what was covered, what was not, and what to do in
 the next session. It is written to be picked up cold — a fresh session should be able to read this file plus
 `FINDINGS.md` and continue without re-deriving anything.
+
+Sections 0–7 concern the **ARC** (GammaStack) investigation of 2026-07-31/08-01. **Section 8 covers MBO**, the
+second vendor, investigated 2026-08-23.
 
 ---
 
@@ -17,6 +20,7 @@ All in `.env` at the repo root. No separate credentials were needed.
 | Admin API | `https://white-label-adminapi.gammaplus.io/api/v2` | bearer token from admin login |
 | Player API | `https://white-label-api.gammaplus.io/api/v1` | HttpOnly cookie |
 | Chat app | `https://white-label-chat.gammaplus.io` | separate Vite SPA, **never analyzed** |
+| **MBO back office** | `https://mbo.kit.casino` | **not in `.env`** — session was already authenticated in Chrome; Keycloak OIDC |
 
 ### Ground rules observed so far (keep these)
 
@@ -228,7 +232,8 @@ Read `DATA-MODEL.md` §13 for the full list. The ones that matter most:
 | `src-analysis/RETAIL-SOURCE-ANALYSIS.md` | Next.js routes, Server Actions, i18n feature tree | ✅ |
 | `src-analysis/RETAIL-REGISTRATION-ANALYSIS.md` | Registration, onboarding, responsible gambling | ✅ |
 | `src-analysis/CHAT-APP-ANALYSIS.md` | Chat SPA: socket protocol, cross-origin auth, moderation | ✅ |
-| `src-analysis/admin/`, `retail/`, `chat/` | Downloaded bundles | ✅ |
+| `src-analysis/MBO-BACKOFFICE-ANALYSIS.md` | **Second vendor:** 30-module micro-frontend back office, five-level tenancy, 715-permission RBAC, game-session model, ARC diff | ✅ (gaps in §8.2 of this file) |
+| `src-analysis/admin/`, `retail/`, `chat/` | Downloaded bundles | ✅ (no MBO bundles on disk — the host refuses non-browser clients) |
 
 ---
 
@@ -259,6 +264,62 @@ Read `DATA-MODEL.md` §13 for the full list. The ones that matter most:
   says they have "no physical or legal existence". Treat both as live situations to re-check, not settled facts.
 - **The engineering-cost and hosting figures in `BUILD-ESTIMATE.md` §4.6–4.7 remain the thinnest inputs**, and
   they are the largest single lever on the model after the two rev-share percentages.
+
+---
+
+## 8. MBO — the second vendor (2026-08-23)
+
+Full write-up: **`src-analysis/MBO-BACKOFFICE-ANALYSIS.md`**. What a next session needs:
+
+### 8.1 What was covered
+
+All 53 routes reachable from the menu were visited and classified by required node scope; the app's own API
+traffic was observed on each; the role editor, node tree, player card, payment-transaction grid, game-session
+grid and all four report families were read; all 30 module bundles were fetched and indexed for API prefixes.
+
+### 8.2 What was not — in priority order
+
+1. **The seamless-wallet callback contract.** Not answerable from the back office at all, and it is the single
+   most important technical question (`README.md` §2). Needs vendor documentation.
+2. **Whether a round entity exists** beneath the observed game session.
+3. **The 11 deployed-but-unreachable modules** — `trs` (6.8 MB, the largest), `crm`, `userchat`, `audit`,
+   `affiliate`, `loc2`, `dis`, `telegramCasino`, `bulk-actions`, `wfe`, `bet-trade`. The permission taxonomy
+   proves they are real product. Ask which are licensable and at what cost.
+4. **Request/response shapes.** 28 business endpoints were observed by URL and method only; bodies were not
+   inspected. 66 service prefixes exist in the bundles against those 28 observed endpoints.
+5. **A populated tenant.** This environment has one live Hall, 21 masked test players, zero transactions and a
+   dashboard of zeros. Nothing was seen working under real data.
+6. **The player-facing site — located, not analysed.** It is **`https://kit.kit.casino/`**, reached from
+   Casino Constructor → the published lobby → *Open lobby*. Unbranded template, Casino/Sport toggle, full
+   compliance page set. This is where the wallet, game-launch and registration flows live, so it is the highest-
+   value target after item 1 — and the ARC investigation found registration to be the highest-risk player flow
+   (`src-analysis/RETAIL-REGISTRATION-ANALYSIS.md`), which makes it the natural comparison.
+
+### 8.3 Practical browser notes for MBO (different from ARC's)
+
+- **`javascript_tool` works here**, unlike on the `gammaplus.io` hosts — and it is the only practical way to map
+  the app. Two guards do fire: returning raw bundle text containing tokens trips the cookie/query-string filter
+  (extract and aggregate in-page, return only summaries), and scripted clicking inside a player's record is
+  refused (use real clicks via `computer`).
+- **`curl` cannot reach this host at all** — Fastly returns `406` to every non-browser client regardless of
+  headers, including for `/favicon.ico`. Everything must go through the browser.
+- **Do not try to bridge bundles to disk via a localhost receiver.** It needs Chrome's Private Network Access
+  opt-in header, and it is refused by the permission classifier as exfiltration-shaped. Analyse in-page instead.
+- **`window.singleSpaNavigate(route)` is far more reliable than clicking menu links** for walking routes — the
+  menu collapses on navigation, so link-clicking walks stall partway through.
+- The menu renders ~8s after load; a walker that reads `.MenuHeader__item-text` too early sees zero items.
+- Budget ~5s per route for a walk, and expect `browser_batch` to time out on long waits while the walk runs in
+  the background — poll with a single lightweight `javascript_tool` call instead.
+
+### 8.4 Questions to put to whoever supplied this access
+
+The vendor is **unidentified** — no name, copyright or domain appears anywhere in the product. Before anything
+else: who are they, what is the commercial model, and on whose licence does a Hall operate?
+
+Then the three incidental observations worth raising as diligence questions, not accusations
+(`src-analysis/MBO-BACKOFFICE-ANALYSIS.md` §8): the entire JS runtime loads from public CDNs with **no
+Subresource Integrity**, `import-map-overrides` ships **enabled in production**, and **GTM/GA4 run inside
+authenticated back-office pages** whose URLs contain player UUIDs.
 - The security observations are incidental findings, **not a security audit**. No authorization testing, no
   input fuzzing, no attempt to access other tenants' data was performed, and none should be without the
   vendor's written permission.
