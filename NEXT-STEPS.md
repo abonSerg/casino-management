@@ -228,6 +228,7 @@ Read `DATA-MODEL.md` §13 for the full list. The ones that matter most:
 | `research/01-white-label-landscape.md` | 15 vendors, models, pricing, feature matrices | ✅ |
 | `research/02-game-provider-integration.md` | Supply chain, wallet contract, launch flow, certification | ✅ |
 | `research/03-fundist-integration.md` | Fundist reconstructed and diffed against Hub88 | ✅ (secondary sources only — see §0) |
+| `research/04-back-office-capability-benchmark.md` | Novelty benchmark: two hands-on back offices vs report 01's matrix; the verified absence of any AI in MBO | ✅ (competitor claims remain marketing-derived) |
 | `src-analysis/ADMIN-BUNDLE-ANALYSIS.md` | ~250 endpoints, Redux actions, RBAC, i18n, security | ✅ (§2.8 corrected by `DATA-MODEL.md`) |
 | `src-analysis/RETAIL-SOURCE-ANALYSIS.md` | Next.js routes, Server Actions, i18n feature tree | ✅ |
 | `src-analysis/RETAIL-REGISTRATION-ANALYSIS.md` | Registration, onboarding, responsible gambling | ✅ |

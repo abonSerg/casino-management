@@ -27,6 +27,7 @@ Started 2026-07-31.
 | [`research/01-white-label-landscape.md`](research/01-white-label-landscape.md) | 15 vendors, white-label vs turnkey vs ownership, published pricing, feature matrices |
 | [`research/02-game-provider-integration.md`](research/02-game-provider-integration.md) | Game supply chain, seamless-wallet API contract, launch flow, certification and licensing |
 | [`research/03-fundist-integration.md`](research/03-fundist-integration.md) | The aggregator this platform actually uses, reconstructed from four independent operator implementations, and diffed against Hub88 |
+| [`research/04-back-office-capability-benchmark.md`](research/04-back-office-capability-benchmark.md) | Two live back offices measured against report 01's marketing-derived matrix. Is any of it new? No — with one exception, and one verified absence that matters |
 | [`src-analysis/MBO-BACKOFFICE-ANALYSIS.md`](src-analysis/MBO-BACKOFFICE-ANALYSIS.md) | **The second vendor.** 30-module micro-frontend back office: five-level tenancy, 715-permission RBAC, game-session and real-vs-bonus money model, and a direct diff against ARC |
 | [`src-analysis/ADMIN-BUNDLE-ANALYSIS.md`](src-analysis/ADMIN-BUNDLE-ANALYSIS.md) | Back-office SPA reverse-engineered: ~250 REST endpoints, RBAC model, domain enums, security |
 | [`src-analysis/RETAIL-SOURCE-ANALYSIS.md`](src-analysis/RETAIL-SOURCE-ANALYSIS.md) | Player site: routes, Server Actions, game launch, 1,796-key i18n feature map |
@@ -63,7 +64,16 @@ Started 2026-07-31.
    micro-frontends. None of this moves the break-even arithmetic — that turns on the rev-share spread — but it
    is a second data point that the buy side is buying something substantial, and it is a better reference design
    for the wallet model than ARC. Detail: `src-analysis/MBO-BACKOFFICE-ANALYSIS.md`.
-5. **The licensing fork decides more than the price.** White label means operating on the vendor's licence.
+5. **Nothing either platform does is new — and the incumbent gap is AI.** Benchmarked feature by feature against
+   the vendor landscape, every MBO capability maps to an established category; the only arguably original thing
+   is a *commercial* mechanism, serving the module set as a runtime import map so licensing is enforced at page
+   load. The finding that matters is an absence: searching all 30 bundles turns up **no AI or ML anywhere** — no
+   recommendation engine, no churn or propensity prediction, no anomaly-based fraud scoring (the anti-fraud
+   module is rules and reports). Meanwhile AI has become a primary axis of vendor comparison in 2026. That is the
+   first argument this investigation has found for building that is about **capability rather than cost**:
+   competing where incumbents are weakest beats replicating fifteen years of back-office breadth. Full benchmark:
+   `research/04-back-office-capability-benchmark.md`.
+6. **The licensing fork decides more than the price.** White label means operating on the vendor's licence.
    Turnkey and ownership require your own — and the licensing calendar, not integration work, is the real
    bottleneck. Curaçao's regulator lost its entire supervisory board and the minister behind its reform in late
    2025, against an application backlog implying well over a year of clearance.

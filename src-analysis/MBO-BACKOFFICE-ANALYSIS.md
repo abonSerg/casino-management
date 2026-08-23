@@ -436,7 +436,34 @@ identifiers.
 Both **`Affiliate Providers`** and **`AffiliateProviders`** appear as categories in the role editor `[observed]`.
 A taxonomy that has drifted into two spellings of one category is a small but real data-quality signal.
 
-### 8.6 The environment is a near-empty sandbox
+### 8.6 There is no AI or ML anywhere in the platform
+
+Searched across all 30 module bundles for `recommend`, `machine learning`, `openai`, `artificial intelligence`,
+`personaliz`, `LLM`, `anomaly`, `propensity`, `churn`, `next best`, `autoML`, `tensorflow`, `embedding`
+`[observed]`. Every apparent hit resolves to something else:
+
+- **`churn`** (13 hits, `@MBO/bi`) is a **churn-*rate* metric with a formula**, sitting alongside retention rate,
+  ARPU, bounce rate, pages-per-visit and registration/deposit conversion rates. Descriptive analytics, not
+  prediction.
+- **`personaliz`** (3 hits in each of six modules) is Spanish/Italian UI text — `personalizado`,
+  `personalizzato` — from the bundled **Jodit** rich-text editor. Nothing to do with personalisation.
+- **`openai`** is (a) the Ant Design icon names `OpenAIFilled` / `OpenAIOutlined` in `@MBO/ccr`, and (b)
+  **`OpenAIModule` in the shell's module registry, which is a misspelling of `OpenAPI`** — the same bundle
+  contains `isForOpenAPI` as a domain flag, the domains table has a **"For OpenAPI"** column, and the permission
+  taxonomy has a category **"OpenAPI Content/FAQ/SEO"**. It is a headless-content API, not an AI feature.
+- **`anomaly`, `propensity`, `next best`, `recommend`** (as a product feature): zero. Notably, the **anti-fraud
+  module contains no anomaly detection** — its dashboard is reports and rule-based duplicate settings.
+
+So: no recommendation engine, no churn or propensity prediction, no anomaly-based fraud scoring, no
+personalisation engine, no LLM anything. For a platform being sold in 2026 this is a real gap — and worth
+contrasting with ARC, which at least declares an `/ai/` namespace in its API
+(`src-analysis/ADMIN-BUNDLE-ANALYSIS.md` §2.1).
+
+The shell's module registry (`@MBO/layout`) names **23 modules**, and includes one with no deployed bundle in
+this environment: **`RegulatorsReportsModule`** — regulatory reporting `[observed]`. Worth asking about; it is a
+compliance capability, and it is absent from both the import map and the permission taxonomy here.
+
+### 8.7 The environment is a near-empty sandbox
 
 One live Hall, 21 players (masked, several flagged as test accounts), zero payment transactions, zero pending
 requests, zero users assigned to any role, and a dashboard reading `0,00` across every KPI for the current month
